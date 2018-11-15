@@ -3,6 +3,10 @@
 <dom-module id="vaadin-slide">
     <template>
         <style>
+            :host([hidden]) {
+                display: none !important;
+            }
+
             /* Add an italic font style to all quotes */
             q {
                 font-style: italic;
@@ -20,7 +24,9 @@
 
         </style>
         <div id="slide-container">
-            <slot></slot>
+            <slot>
+
+            </slot>
         </div>
     </template>
 

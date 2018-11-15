@@ -6,13 +6,8 @@
     <template>
 
         <style>
-            * {
-                box-sizing: border-box
-            }
-
-            body {
-                font-family: Verdana, sans-serif;
-                margin: 0
+            :host([hidden]) {
+                display: none !important;
             }
 
             /* Slideshow container */
@@ -75,11 +70,25 @@
                 background-color: #717171;
             }
 
+            /*::slotted(vaadin-slide) {*/
+                /*display: none;*/
+            /*}*/
+
+            /*::slotted(.active-slide) {*/
+                /*display: block;*/
+            /*}*/
 
         </style>
         <div id="slideshow-container">
             <slot>
-
+                <vaadin-slide>
+                    <img class="" src="https://www.w3schools.com/w3css/img_lights.jpg" style="width:100%">
+                </vaadin-slide>
+                <vaadin-slide>
+                    <q>I love you the more in that I believe you had liked me for my
+                        own sake and for nothing else</q>
+                    <p class="author">- John Keats</p>
+                </vaadin-slide>
             </slot>
 
             <a class="prev" on-click="previousSlide">❮</a>
@@ -88,11 +97,8 @@
         </div>
 
         <div class="dot-container">
-            <template is="dom-repeat" items="[[indexArray]]" as="indexx">
-                <!--<vaadin-button selected$="[[_isPageSelected(pageLabel, currentPage)]]" theme="small tertiary" on-click="_setPage">-->
-                    <!--[[pageLabel]]-->
-                <!--</vaadin-button>-->
-                <span class="dot" on-click="currentSlide" data-item$="[[indexx]]"></span>
+            <template is="dom-repeat" items="[[indexArray]]" as="slideIndex">
+                <span class="dot" on-click="currentSlide" data-item$="[[slideIndex]]"></span>
             </template>
         </div>
 
@@ -110,14 +116,14 @@
                     // Declare your properties here.
                     slideIndex: {
                         type: Number,
-                        value: -1,
-                        reflectToAttribute: true,
+                        value: 0,
                         observer: '_slideChanged',
                         notify: true
                     },
                     slidesNumber: {
                         type: Number,
-
+                        value: 0,
+                        observer: '_slideChanged'
                     },
 
                     indexArray: {
@@ -126,102 +132,101 @@
                 };
             }
 
-            // A Polymer.Element's shadowRoot is created in connectedCallback so you can only access it after calling super.connectedCallback
+            // Polymer.Element's shadowRoot is created in connectedCallback so you can only access it after calling super.connectedCallback
 
             ready() {
                 super.ready();
-                //this.addEventListener('dom-change', (e) => { alert("Diego"); });
-                this.indexArray = this._getChildrenIndexArray();
-                //
-                // // Callback function to execute when mutations are observed
-                // var callback = function(mutationsList, observer) {
-                //     for(var mutation of mutationsList) {
-                //         if (mutation.type == 'childList') {
-                //             console.log('A child node has been added or removed.');
-                //         }
-                //         else if (mutation.type == 'attributes') {
-                //             console.log('The ' + mutation.attributeName + ' attribute was modified.');
-                //         }
-                //     }
-                // }
 
-                var a = new Polymer.FlattenedNodesObserver(this.shadowRoot.querySelector("slot"), (info) => {
-                    //alert("jaja");
-                    this.indexArray = this._getChildrenIndexArray();
+                var registration = new Polymer.FlattenedNodesObserver(this.shadowRoot.querySelector("slot"), (info) => {
+                    this.indexArray = this._getChildrenIndexes();
                     this.slidesNumber = this.indexArray.length;
+                });
 
-                    if (this._isSlideInRange(this.slideIndex)){
-                        this.showSlides(this.slideIndex);
-                    }
-            });
             }
 
-            _getChildren() {
-                return this.shadowRoot.querySelectorAll("vaadin-slide"); //this.shadowRoot.querySelector("#slideshow-container").children;
-            }
-
-            _getChildrenIndexArray() {
+            _getChildrenIndexes() {
                 const array = [];
-                for (let index = 1; index <= this._getChildren().length; index++) {
+                for (let index = 0; index < this._getSlides().length; index++) {
                     array.push(index)
                 }
                 return array;
             }
 
-            // Observer method defined as a class method
-            _slideChanged(newValue, oldValue) {
-                //this.showSlides(newValue);
+            _slideChanged() {
+                if (!this._isSlideInRange(this.slideIndex)){
+                    if ( this.slideIndex < 0){
+                        this.slideIndex = Math.max(0,this.slidesNumber - 1);
+                    } else {
+                        this.slideIndex = 0;
+                    }
+                }
+
+                this.showSlide(this.slideIndex);
             }
 
-            plusSlides(n) {
-                this.slideIndex += n;
-            }
-
+            //////
             currentSlide(event) {
                 alert("You clicked me!" +  event.target.dataset.item);
-                this.slideIndex = event.target.dataset.item;
-                this.showSlides(this.slideIndex);
+                let selectedSlideIndex =  parseInt(event.target.dataset.item);
+                if (!isNaN(selectedSlideIndex)) {
+                    this.slideIndex = selectedSlideIndex;
+                }
             }
 
+
             nextSlide() {
-                if (this._isSlideInRange(this.slideIndex)){
-                    this.showSlides(this.slideIndex + 1);
-                    //this.slideIndex += 1;
-                }
+                this.slideIndex += 1;
             }
 
             previousSlide() {
-                if (this._isSlideInRange(this.slideIndex)){
-                    this.showSlides(this.slideIndex - 1);
-                    //this.slideIndex -= 1;
+                this.slideIndex -= 1;
+            }
+
+            //////////////
+
+
+
+            showSlide(n) {
+                this._hideAllSlides();
+                this._hideAllDots();
+
+                if (this.slidesNumber > 0){ // when it is not empty
+                    let slides = this._getSlides();
+                    let dots = this._getDots();
+
+                    if (slides && slides.length > 0)
+                        slides[this.slideIndex].removeAttribute("hidden");
+                    if (dots && dots.length > 0)
+                        dots[this.slideIndex].className += " active";
                 }
             }
 
-            showSlides(n) {
-                if (n <= 0) {
-                    throw "It is not possible to display slide: " + n;
+            _hideAllSlides() {
+                let slides = this._getSlides();
+
+                for (let i = 0; i < slides.length; i++) {
+                    slides[i].setAttribute("hidden","");
                 }
-                var i;
-                var slides = this.shadowRoot.querySelectorAll("vaadin-slide");
-                var dots = this.shadowRoot.querySelectorAll(".dot");
-                if (n > slides.length) {
-                    this.slideIndex = 1
-                }
-                if (n < 1) {
-                    this.slideIndex = slides.length
-                }
-                for (i = 0; i < slides.length; i++) {
-                    slides[i].style.display = "none";
-                }
-                for (i = 0; i < dots.length; i++) {
+            }
+
+            _hideAllDots() {
+                let dots = this._getDots();
+
+                for (let i = 0; i < dots.length; i++) {
                     dots[i].className = dots[i].className.replace(" active", "");
                 }
-                slides[this.slideIndex - 1].style.display = "block";
-                dots[this.slideIndex - 1].className += " active";
             }
 
             _isSlideInRange(slide){
-                return (slide > 0 && slide <= this.slidesNumber);
+                return (slide >= 0 && slide < this.slidesNumber);
+            }
+
+            _getSlides() {
+                return this.shadowRoot.querySelectorAll("vaadin-slide");
+            }
+
+            _getDots() {
+                return this.shadowRoot.querySelectorAll(".dot");
             }
 
         }
