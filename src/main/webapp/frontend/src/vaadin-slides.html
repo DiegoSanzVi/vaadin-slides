@@ -1,0 +1,231 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="vaadin-slide.html">
+<link rel="import" href="../bower_components/polymer/lib/utils/flattened-nodes-observer.html">
+
+<dom-module id="vaadin-slides">
+    <template>
+
+        <style>
+            * {
+                box-sizing: border-box
+            }
+
+            body {
+                font-family: Verdana, sans-serif;
+                margin: 0
+            }
+
+            /* Slideshow container */
+            #slideshow-container {
+                position: relative;
+                background: #f1f1f1f1;
+                min-height: 100px;
+                min-width: 100px;
+            }
+
+            /* Next & previous buttons */
+            .prev, .next {
+                cursor: pointer;
+                position: absolute;
+                top: 50%;
+                width: auto;
+                margin-top: -30px;
+                padding: 16px;
+                color: #888;
+                font-weight: bold;
+                font-size: 20px;
+                border-radius: 0 3px 3px 0;
+                user-select: none;
+            }
+
+            /* Position the "next button" to the right */
+            .next {
+                position: absolute;
+                right: 0;
+                border-radius: 3px 0 0 3px;
+            }
+
+            /* On hover, add a black background color with a little bit see-through */
+            .prev:hover, .next:hover {
+                background-color: rgba(0, 0, 0, 0.8);
+                color: white;
+            }
+
+            /* The dot/bullet/indicator container */
+            .dot-container {
+                text-align: center;
+                padding: 20px;
+                background: #ddd;
+            }
+
+            /* The dots/bullets/indicators */
+            .dot {
+                cursor: pointer;
+                height: 15px;
+                width: 15px;
+                margin: 0 2px;
+                background-color: #bbb;
+                border-radius: 50%;
+                display: inline-block;
+                transition: background-color 0.6s ease;
+            }
+
+            /* Add a background color to the active dot/circle */
+            .active, .dot:hover {
+                background-color: #717171;
+            }
+
+
+        </style>
+        <div id="slideshow-container">
+            <slot>
+
+            </slot>
+
+            <a class="prev" on-click="previousSlide">❮</a>
+            <a class="next" on-click="nextSlide">❯</a>
+
+        </div>
+
+        <div class="dot-container">
+            <template is="dom-repeat" items="[[indexArray]]" as="indexx">
+                <!--<vaadin-button selected$="[[_isPageSelected(pageLabel, currentPage)]]" theme="small tertiary" on-click="_setPage">-->
+                    <!--[[pageLabel]]-->
+                <!--</vaadin-button>-->
+                <span class="dot" on-click="currentSlide" data-item$="[[indexx]]"></span>
+            </template>
+        </div>
+
+    </template>
+
+    <script>
+        class VaadinSlides extends Polymer.Element {
+            static get is() {
+                return 'vaadin-slides';
+            }
+
+            static get properties() {
+
+                return {
+                    // Declare your properties here.
+                    slideIndex: {
+                        type: Number,
+                        value: -1,
+                        reflectToAttribute: true,
+                        observer: '_slideChanged',
+                        notify: true
+                    },
+                    slidesNumber: {
+                        type: Number,
+
+                    },
+
+                    indexArray: {
+                        type: Array
+                    }
+                };
+            }
+
+            // A Polymer.Element's shadowRoot is created in connectedCallback so you can only access it after calling super.connectedCallback
+
+            ready() {
+                super.ready();
+                //this.addEventListener('dom-change', (e) => { alert("Diego"); });
+                this.indexArray = this._getChildrenIndexArray();
+                //
+                // // Callback function to execute when mutations are observed
+                // var callback = function(mutationsList, observer) {
+                //     for(var mutation of mutationsList) {
+                //         if (mutation.type == 'childList') {
+                //             console.log('A child node has been added or removed.');
+                //         }
+                //         else if (mutation.type == 'attributes') {
+                //             console.log('The ' + mutation.attributeName + ' attribute was modified.');
+                //         }
+                //     }
+                // }
+
+                var a = new Polymer.FlattenedNodesObserver(this.shadowRoot.querySelector("slot"), (info) => {
+                    //alert("jaja");
+                    this.indexArray = this._getChildrenIndexArray();
+                    this.slidesNumber = this.indexArray.length;
+
+                    if (this._isSlideInRange(this.slideIndex)){
+                        this.showSlides(this.slideIndex);
+                    }
+            });
+            }
+
+            _getChildren() {
+                return this.shadowRoot.querySelectorAll("vaadin-slide"); //this.shadowRoot.querySelector("#slideshow-container").children;
+            }
+
+            _getChildrenIndexArray() {
+                const array = [];
+                for (let index = 1; index <= this._getChildren().length; index++) {
+                    array.push(index)
+                }
+                return array;
+            }
+
+            // Observer method defined as a class method
+            _slideChanged(newValue, oldValue) {
+                //this.showSlides(newValue);
+            }
+
+            plusSlides(n) {
+                this.slideIndex += n;
+            }
+
+            currentSlide(event) {
+                alert("You clicked me!" +  event.target.dataset.item);
+                this.slideIndex = event.target.dataset.item;
+                this.showSlides(this.slideIndex);
+            }
+
+            nextSlide() {
+                if (this._isSlideInRange(this.slideIndex)){
+                    this.showSlides(this.slideIndex + 1);
+                    //this.slideIndex += 1;
+                }
+            }
+
+            previousSlide() {
+                if (this._isSlideInRange(this.slideIndex)){
+                    this.showSlides(this.slideIndex - 1);
+                    //this.slideIndex -= 1;
+                }
+            }
+
+            showSlides(n) {
+                if (n <= 0) {
+                    throw "It is not possible to display slide: " + n;
+                }
+                var i;
+                var slides = this.shadowRoot.querySelectorAll("vaadin-slide");
+                var dots = this.shadowRoot.querySelectorAll(".dot");
+                if (n > slides.length) {
+                    this.slideIndex = 1
+                }
+                if (n < 1) {
+                    this.slideIndex = slides.length
+                }
+                for (i = 0; i < slides.length; i++) {
+                    slides[i].style.display = "none";
+                }
+                for (i = 0; i < dots.length; i++) {
+                    dots[i].className = dots[i].className.replace(" active", "");
+                }
+                slides[this.slideIndex - 1].style.display = "block";
+                dots[this.slideIndex - 1].className += " active";
+            }
+
+            _isSlideInRange(slide){
+                return (slide > 0 && slide <= this.slidesNumber);
+            }
+
+        }
+
+        customElements.define(VaadinSlides.is, VaadinSlides);
+    </script>
+</dom-module>

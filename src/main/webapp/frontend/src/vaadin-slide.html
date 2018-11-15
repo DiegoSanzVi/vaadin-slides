@@ -1,0 +1,41 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<dom-module id="vaadin-slide">
+    <template>
+        <style>
+            /* Add an italic font style to all quotes */
+            q {
+                font-style: italic;
+            }
+
+            /* Add a blue color to the author */
+            .author {
+                color: cornflowerblue;
+            }
+
+            #slide-container {
+                padding: var(--vaadin-slider-padding,0px);
+                text-align: center;
+            }
+
+        </style>
+        <div id="slide-container">
+            <slot></slot>
+        </div>
+    </template>
+
+    <script>
+        class VaadinSlide extends Polymer.Element {
+            static get is() {
+                return 'vaadin-slide';
+            }
+
+            static get properties() {
+                return {
+                    // Declare your properties here.
+                };
+            }
+        }
+        customElements.define(VaadinSlide.is, VaadinSlide);
+    </script>
+</dom-module>
