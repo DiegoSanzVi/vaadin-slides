@@ -28,7 +28,7 @@
             /* Next & previous buttons */
             .prev, .next {
                 position: absolute;
-                top: 50%;
+                top: calc(50% - var(--lumo-button-size,0) / 2);
                 width: auto;
                 font-weight: bold;
                 font-size: 18px;
@@ -39,32 +39,6 @@
             /* Position the "next button" to the right */
             .next {
                 right: 0;
-            }
-
-            /* Fading animation */
-            .fade {
-                -webkit-animation-name: fade;
-                -webkit-animation-duration: 1.5s;
-                animation-name: fade;
-                animation-duration: 1.5s;
-            }
-
-            @-webkit-keyframes fade {
-                from {
-                    opacity: .4
-                }
-                to {
-                    opacity: 1
-                }
-            }
-
-            @keyframes fade {
-                from {
-                    opacity: .4
-                }
-                to {
-                    opacity: 1
-                }
             }
 
         </style>

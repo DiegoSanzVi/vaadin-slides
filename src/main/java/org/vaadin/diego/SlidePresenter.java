@@ -28,7 +28,6 @@ public class SlidePresenter extends PolymerTemplate<SlidePresenter.VaadinSlidesM
     private Button nextSlideBtn;
 
     public SlidePresenter() {
-        setWidth("100%");
     }
 
     public SlidePresenter(Component... components) {
