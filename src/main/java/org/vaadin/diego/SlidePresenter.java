@@ -11,12 +11,7 @@ import com.vaadin.flow.component.polymertemplate.Id;
 import com.vaadin.flow.component.polymertemplate.PolymerTemplate;
 import com.vaadin.flow.templatemodel.TemplateModel;
 
-/**
- * A Designer generated component for the vaadin-slides.html template.
- * <p>
- * Designer will add and remove fields with @Id mappings but
- * does not overwrite or otherwise change this file.
- */
+
 @Tag("vaadin-slide-presenter")
 @HtmlImport("frontend://src/vaadin-slide-presenter.html")
 public class SlidePresenter extends PolymerTemplate<SlidePresenter.VaadinSlidesModel> implements HasComponents, HasStyle, HasSize {
