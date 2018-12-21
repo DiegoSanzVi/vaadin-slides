@@ -6,7 +6,7 @@
 <link rel="import" href="../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../bower_components/vaadin-icons/vaadin-icons.html">
 
-<dom-module id="diego-slides">
+<dom-module id="vaadin-slide-presenter">
     <template>
         <style>
 
@@ -27,21 +27,18 @@
 
             /* Next & previous buttons */
             .prev, .next {
-                cursor: pointer;
                 position: absolute;
                 top: 50%;
                 width: auto;
                 font-weight: bold;
                 font-size: 18px;
                 transition: 0.6s ease;
-                border-radius: 0 3px 3px 0;
                 user-select: none;
             }
 
             /* Position the "next button" to the right */
             .next {
                 right: 0;
-                border-radius: 3px 0 0 3px;
             }
 
             /* Fading animation */
@@ -86,9 +83,9 @@
     </template>
 
     <script>
-        class DiegoSlides extends Polymer.Element {
+        class VaadinSlidePresenter extends Polymer.Element {
             static get is() {
-                return 'diego-slides';
+                return 'vaadin-slide-presenter';
             }
 
             static get properties() {
@@ -156,6 +153,6 @@
             }
         }
 
-        customElements.define(DiegoSlides.is, DiegoSlides);
+        customElements.define(VaadinSlidePresenter.is, VaadinSlidePresenter);
     </script>
 </dom-module>

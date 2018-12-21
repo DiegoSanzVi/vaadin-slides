@@ -1,4 +1,4 @@
-package org.vaadin;
+package org.vaadin.diego;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasComponents;
@@ -13,13 +13,13 @@ import com.vaadin.flow.templatemodel.TemplateModel;
 
 /**
  * A Designer generated component for the vaadin-slides.html template.
- *
+ * <p>
  * Designer will add and remove fields with @Id mappings but
  * does not overwrite or otherwise change this file.
  */
-@Tag("diego-slides")
-@HtmlImport("frontend://src/diego-slides.html")
-public class DiegoSlides extends PolymerTemplate<DiegoSlides.VaadinSlidesModel> implements HasComponents, HasStyle, HasSize {
+@Tag("vaadin-slide-presenter")
+@HtmlImport("frontend://src/vaadin-slide-presenter.html")
+public class SlidePresenter extends PolymerTemplate<SlidePresenter.VaadinSlidesModel> implements HasComponents, HasStyle, HasSize {
 
     @Id("previous-slide-btn")
     private Button previousSlideBtn;
@@ -27,15 +27,11 @@ public class DiegoSlides extends PolymerTemplate<DiegoSlides.VaadinSlidesModel> 
     @Id("next-slide-btn")
     private Button nextSlideBtn;
 
-    /**
-     * Creates a new org.vaadin.VaadinSlides.
-     */
-    public DiegoSlides() {
-        // You can initialise any data required for the connected UI components here.
+    public SlidePresenter() {
         setWidth("100%");
     }
 
-    public DiegoSlides(Component... components) {
+    public SlidePresenter(Component... components) {
         this();
         add(components);
     }
