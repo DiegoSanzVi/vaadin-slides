@@ -21,11 +21,11 @@ import com.vaadin.flow.templatemodel.TemplateModel;
 @HtmlImport("frontend://src/diego-slides.html")
 public class DiegoSlides extends PolymerTemplate<DiegoSlides.VaadinSlidesModel> implements HasComponents, HasStyle, HasSize {
 
-    @Id("vaadinButton")
-    private Button vaadinButton;
+    @Id("previous-slide-btn")
+    private Button previousSlideBtn;
 
-    @Id("vaadinButton1")
-    private Button vaadinButton1;
+    @Id("next-slide-btn")
+    private Button nextSlideBtn;
 
     /**
      * Creates a new org.vaadin.VaadinSlides.
@@ -40,7 +40,13 @@ public class DiegoSlides extends PolymerTemplate<DiegoSlides.VaadinSlidesModel> 
         add(components);
     }
 
+    public Button getPreviousSlideBtn() {
+        return previousSlideBtn;
+    }
 
+    public Button getNextSlideBtn() {
+        return nextSlideBtn;
+    }
 
     /**
      * This model binds properties between org.vaadin.VaadinSlides and vaadin-slides.html
@@ -48,5 +54,4 @@ public class DiegoSlides extends PolymerTemplate<DiegoSlides.VaadinSlidesModel> 
     public interface VaadinSlidesModel extends TemplateModel {
         // Add setters and getters for template properties here.
     }
-
 }

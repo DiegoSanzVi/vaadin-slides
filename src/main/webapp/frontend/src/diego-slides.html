@@ -1,21 +1,22 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
-<link rel="import" href="../bower_components/polymer/lib/utils/flattened-nodes-observer.html">
-<link rel="import" href="../bower_components/vaadin-button/src/vaadin-button.html">
+<link rel="import"
+      href="../bower_components/polymer/lib/utils/flattened-nodes-observer.html">
+<link rel="import"
+      href="../bower_components/vaadin-button/src/vaadin-button.html">
 <link rel="import" href="../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../bower_components/vaadin-icons/vaadin-icons.html">
 
 <dom-module id="diego-slides">
     <template>
-<style>
+        <style>
 
             :host([hidden]) {
                 display: none !important;
             }
 
-            * {box-sizing: border-box}
-            body {font-family: Verdana, sans-serif; margin:0}
-            .mySlides {display: none}
-            img {vertical-align: middle;}
+            img {
+                vertical-align: middle;
+            }
 
             /* Slideshow container */
             #slideshow-container {
@@ -30,7 +31,6 @@
                 position: absolute;
                 top: 50%;
                 width: auto;
-                color: white;
                 font-weight: bold;
                 font-size: 18px;
                 transition: 0.6s ease;
@@ -44,12 +44,6 @@
                 border-radius: 3px 0 0 3px;
             }
 
-            /* On hover, add a black background color with a little bit see-through */
-            .prev:hover, .next:hover {
-                background-color: rgba(0,0,0,0.8);
-            }
-
-
             /* Fading animation */
             .fade {
                 -webkit-animation-name: fade;
@@ -59,33 +53,37 @@
             }
 
             @-webkit-keyframes fade {
-                from {opacity: .4}
-                to {opacity: 1}
+                from {
+                    opacity: .4
+                }
+                to {
+                    opacity: 1
+                }
             }
 
             @keyframes fade {
-                from {opacity: .4}
-                to {opacity: 1}
+                from {
+                    opacity: .4
+                }
+                to {
+                    opacity: 1
+                }
             }
 
-            /* On smaller screens, decrease text size */
-            @media only screen and (max-width: 300px) {
-                .prev, .next,.text {font-size: 11px}
-            }
         </style>
-<div id="slideshow-container">
- <slot class="no-slide"></slot>
- <vaadin-button class="prev no-slide" on-click="previousSlide" id="vaadinButton1">
-     <iron-icon icon="vaadin:angle-left"></iron-icon>
- </vaadin-button>
- <vaadin-button class="next no-slide" on-click="nextSlide" id="vaadinButton">
-  <iron-icon icon="vaadin:angle-right"></iron-icon>
- </vaadin-button>
- <!--<a class="prev no-slide" on-click="previousSlide">❮</a>-->
- <!--<a class="next no-slide" on-click="nextSlide">❯</a>-->
-</div>
-<br>
-</template>
+        <div id="slideshow-container">
+            <slot class="no-slide"></slot>
+            <vaadin-button class="prev no-slide" on-click="previousSlide"
+                           id="previous-slide-btn">
+                <iron-icon icon="vaadin:angle-left"></iron-icon>
+            </vaadin-button>
+            <vaadin-button class="next no-slide" on-click="nextSlide"
+                           id="next-slide-btn">
+                <iron-icon icon="vaadin:angle-right"></iron-icon>
+            </vaadin-button>
+        </div>
+        <br>
+    </template>
 
     <script>
         class DiegoSlides extends Polymer.Element {
@@ -110,12 +108,11 @@
             }
 
             ready() {
-                //debugger;
                 super.ready();
 
                 var registration = new Polymer.FlattenedNodesObserver(this.shadowRoot.querySelector("slot"), (info) => {
                     this._showSlides();
-                });
+                 });
             }
 
             previousSlide() {
@@ -140,8 +137,8 @@
                 }
             }
 
-            _showSlides(){
-               this.showSlide(this.slideIndex);
+            _showSlides() {
+                this.showSlide(this.slideIndex);
             }
 
             _hideSlides(slides) {
@@ -150,7 +147,7 @@
                 }
             }
 
-            _showSlide(slides,index) {
+            _showSlide(slides, index) {
                 slides[index].style.display = "block";
             }
 
@@ -158,6 +155,7 @@
                 return this.querySelectorAll(":scope > :not(no-slide)");
             }
         }
+
         customElements.define(DiegoSlides.is, DiegoSlides);
     </script>
 </dom-module>
